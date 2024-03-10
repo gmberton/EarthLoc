@@ -1,0 +1,11 @@
+einops
+faiss_cpu
+imageio
+numpy
+opencv_python
+Pillow
+pytorch_metric_learning
+torch
+torchmetrics
+torchvision
+tqdm
