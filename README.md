@@ -2,6 +2,8 @@
 Code for CVPR 2024 paper "EarthLoc: Astronaut Photography Localization by Indexing Earth from Space".
 The paper introduces the task of Astronaut Photography Localization (APL) through image retrieval.
 
+[[ArXiv](https://arxiv.org/abs/2403.06758)] [[BibTex](https://github.com/gmberton/EarthLoc#cite)]
+
 ## Setup
 Download the queries and database images as such
 ```
