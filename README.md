@@ -5,8 +5,12 @@ The paper introduces the task of Astronaut Photography Localization (APL) throug
 [[ArXiv](https://arxiv.org/abs/2403.06758)] [[BibTex](https://github.com/gmberton/EarthLoc?tab=readme-ov-file#cite)]
 
 ## Setup
-Download the queries and database images as such
+Clone the repo, install packages, and download the queries and database images as such
 ```
+git clone https://github.com/gmberton/EarthLoc
+cd EarthLoc
+pip install -r requirements.txt
+
 python data/database_downloader.py
 python data/queries_downloader.py
 ```
