@@ -1,16 +1,11 @@
 
-
-import io
-import os
 import csv
-import time
-import imageio
-import numpy as np
-from tqdm import tqdm
 from PIL import Image
+from tqdm import tqdm
 from pathlib import Path
 from multiprocessing import Pool
-from urllib.request import Request, urlopen
+
+from data_utils import download_image_from_url, image_save_atomically
 
 NUM_PROCESSES = 16
 
@@ -18,21 +13,6 @@ BASE_URL = "https://s2maps-tiles.eu/wmts?layer=s2cloudless-__YEAR___3857&" \
     "style=default&tilematrixset=GoogleMapsCompatible&Service=WMTS" \
     "&Request=GetTile&Version=1.0.0&Format=image%2Fjpeg" \
     "&TileMatrix=__ZOOM__&TileCol=__COL__&TileRow=__ROW__"
-
-
-def download_image(url, num_tries=4):
-    """Return PIL Image from the URL"""
-    for i in range(num_tries):  # Try the download num_tries
-        try:
-            req = Request(url=url, headers={'User-Agent': 'Mozilla/5.0'})
-            req = urlopen(req, timeout=5)
-            return Image.open(io.BytesIO(req.read())).convert("RGB")
-        except Exception as e:
-            if i == num_tries:
-                raise e
-            else:
-                print(f"Couldn't download {url} due to {e}, will retry in 10 seconds")
-                time.sleep(10)
 
 
 def download_region(metadata):
@@ -47,16 +27,17 @@ def download_region(metadata):
         image_path = folder_name / image_name
         if image_path.exists():
             continue
-        image = np.zeros([1024, 1024, 3], dtype=np.uint8)
+        tile_mosaic = Image.new("RGB", (1024, 1024))
         for r in range(4):
             for c in range(4):
                 url = BASE_URL\
                     .replace('__YEAR__', str(year)).replace('__ZOOM__', str(zoom))\
                     .replace('__ROW__', str(row+r)).replace('__COL__', str(col+c))
-                tile = download_image(url)
-                image[r*256 : (r+1)*256, c*256 : (c+1)*256] = np.array(tile)
-        os.makedirs(folder_name, exist_ok=True)
-        imageio.imsave(image_path, image)
+                tile = download_image_from_url(url)
+                left = c * 256
+                upper = r * 256
+                tile_mosaic.paste(tile, (left, upper))
+        image_save_atomically(tile_mosaic, image_path)
 
 
 def read_metadata(metadata):

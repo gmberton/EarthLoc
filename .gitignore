@@ -1,0 +1,4 @@
+data/database
+data/queries
+logs
+__pycache__

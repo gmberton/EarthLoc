@@ -1,6 +1,5 @@
 einops
 faiss_cpu
-imageio
 numpy
 opencv_python
 Pillow
