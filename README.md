@@ -16,6 +16,8 @@ python data/queries_downloader.py
 ```
 This will download all required images within the directory `data`.
 
+Then download the file containing the intersections between queries and database images (would be too heavy to compute online) [at this link](https://drive.google.com/file/d/169X9TnrWpdFy4WQpyBZ9DBFUwOb7Nl5F/view?usp=drive_link) and put it in `data/queries_intersections_with_db_2021.torch`.
+
 ## Train
 Once the dataset is downloaded, simply run
 ```
@@ -26,6 +28,18 @@ or
 python train.py -h
 ```
 to see the possible hyperparameters.
+
+
+## Trained model
+
+Available [here](https://drive.google.com/file/d/1NJUVZm6-JncHRR01pjj4QjWNYjcLbIzm/view?usp=drive_link)
+
+
+## TODO / coming soon
+
+- Automatize entire setup (download of data and `queries_intersections_with_db_2021.torch` if missing)
+- Improve instructions to resume from trained model
+
 
 ## Cite
 Here is the bibtex to cite our paper
