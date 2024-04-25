@@ -15,8 +15,22 @@ python data/database_downloader.py
 python data/queries_downloader.py
 ```
 This will download all required images within the directory `data`.
+Each image filename contains its metadata, according to this format:
+`
+@ lat1 @ lon1 @ lat2 @ lon2 @ lat3 @ lon3 @ lat4 @ lon4 @ image_id @ timestamp @ nadir_lat @ nadir_lon @ sq_km_area @ orientation @ .jpg
+`
 
-Then download the file containing the intersections between queries and database images (would be too heavy to compute online) [at this link](https://drive.google.com/file/d/169X9TnrWpdFy4WQpyBZ9DBFUwOb7Nl5F/view?usp=drive_link) and put it in `data/queries_intersections_with_db_2021.torch`.
+Where the first 8 fields are the latitudes and longitudes of the 4 corners of the image (i.e. the footprint). `nadir_lat` and `nadir_lon` are the position of nadir (which corresponds to the center of the footprint in database images, but can be thousands of kilometers aways from the footprint for queries).
+
+For database images, `image_id` corresponds to zoom, row, column (according to WMTS).
+For query images, `image_id` corresponds to mission, roll, frame, which are a unique identifier of ISS photographs.
+
+`sq_km_area` is the footprint covered area in squared kilometers, and `orientation` is the orientation of the image from 0 to 360° (e.g. 0° means that the image is north-up, like a normal map): orientation is always 0° for database images.
+
+
+
+After the images are downloaded, download the file containing the intersections between queries and database images (it would be too heavy to compute online at the beginning of every experiment) [at this link](https://drive.google.com/file/d/169X9TnrWpdFy4WQpyBZ9DBFUwOb7Nl5F/view?usp=drive_link) and put it in `data/queries_intersections_with_db_2021.torch`.
+This file used for inference, to see if the predictions are correct.
 
 ## Train
 Once the dataset is downloaded, simply run
