@@ -4,6 +4,11 @@ The paper introduces the task of Astronaut Photography Localization (APL) throug
 
 [[ArXiv](https://arxiv.org/abs/2403.06758)] [[BibTex](https://github.com/gmberton/EarthLoc?tab=readme-ov-file#cite)]
 
+<p  align="center">
+  <img src="https://github.com/EarthLoc-and-EarthMatch/EarthLoc-and-EarthMatch.github.io/blob/b0902f64ef548ee1e3e5d5fdbda3c99e7ef27146/static/images/task_animation_low_res.gif" width="60%"/>
+</p>
+
+
 ## Setup
 Clone the repo, install packages, and download the queries and database images as such
 ```
