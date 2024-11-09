@@ -54,12 +54,6 @@ to see the possible hyperparameters.
 Available [here](https://drive.google.com/file/d/1NJUVZm6-JncHRR01pjj4QjWNYjcLbIzm/view?usp=drive_link)
 
 
-## TODO / coming soon
-
-- Automatize entire setup (download of data and `queries_intersections_with_db_2021.torch` if missing)
-- Improve instructions to resume from trained model
-
-
 ## Cite
 Here is the bibtex to cite our paper
 ```
