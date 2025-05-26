@@ -54,8 +54,15 @@ to see the possible hyperparameters.
 
 ## Trained model
 
-Available [here](https://drive.google.com/file/d/1NJUVZm6-JncHRR01pjj4QjWNYjcLbIzm/view?usp=drive_link)
+The trained model is available under `data/best_trained_model.py` (once the data is downloaded following the step above). Then you can run the evaluation with
+```
+python eval.py --resume_model best_trained_model.pt
+```
 
+If you want to download the model without download the dataset:
+```
+rsync -rhz --info=progress2 --ignore-existing rsync://vandaldata.polito.it/sf_xl/EarthLoc/data/best_trained_model.pt .
+```
 
 ## Cite
 Here is the bibtex to cite our paper
