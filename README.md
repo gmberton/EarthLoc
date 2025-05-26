@@ -2,7 +2,7 @@
 Code for CVPR 2024 paper "EarthLoc: Astronaut Photography Localization by Indexing Earth from Space".
 The paper introduces the task of Astronaut Photography Localization (APL) through image retrieval.
 
-[[ArXiv](https://arxiv.org/abs/2403.06758)] [[BibTex](https://github.com/gmberton/EarthLoc?tab=readme-ov-file#cite)]
+[[ArXiv](https://arxiv.org/abs/2403.06758)] [[BibTex](https://github.com/gmberton/EarthLoc?tab=readme-ov-file#cite)] [[Webpage](https://earthloc-and-earthmatch.github.io/)]
 
 <p  align="center">
   <img src="https://github.com/EarthLoc-and-EarthMatch/EarthLoc-and-EarthMatch.github.io/blob/b0902f64ef548ee1e3e5d5fdbda3c99e7ef27146/static/images/task_animation_low_res.gif" width="60%"/>
@@ -10,16 +10,22 @@ The paper introduces the task of Astronaut Photography Localization (APL) throug
 
 
 ## Setup
-Clone the repo, install packages, and download the queries and database images as such
+Clone the repo and install packages
 ```
 git clone https://github.com/gmberton/EarthLoc
 cd EarthLoc
 pip install -r requirements.txt
-
-python data/database_downloader.py
-python data/queries_downloader.py
 ```
-This will download all required images within the directory `data`.
+
+## Data
+To download the data you can simply run
+```
+rsync -rhz --info=progress2 --ignore-existing rsync://vandaldata.polito.it/sf_xl/EarthLoc/data .
+```
+Note: the data can only be downloaded with rsync. Using wget or HTTP or trying to download frmo your browser is not going to work.
+
+This will download all required images within the directory `data`, which will take about 65 GB in storage.
+
 Each image filename contains its metadata, according to this format:
 `
 @ lat1 @ lon1 @ lat2 @ lon2 @ lat3 @ lon3 @ lat4 @ lon4 @ image_id @ timestamp @ nadir_lat @ nadir_lon @ sq_km_area @ orientation @ .jpg
@@ -32,10 +38,7 @@ For query images, `image_id` corresponds to mission, roll, frame, which are a un
 
 `sq_km_area` is the footprint covered area in squared kilometers, and `orientation` is the orientation of the image from 0 to 360° (e.g. 0° means that the image is north-up, like a normal map): orientation is always 0° for database images.
 
-
-
-After the images are downloaded, download the file containing the intersections between queries and database images (it would be too heavy to compute online at the beginning of every experiment) [at this link](https://drive.google.com/file/d/169X9TnrWpdFy4WQpyBZ9DBFUwOb7Nl5F/view?usp=drive_link) and put it in `data/queries_intersections_with_db_2021.torch`.
-This file used for inference, to see if the predictions are correct.
+Besides the images, the rsync command will download the file containing the intersections between queries and database images (it is faster to have them pre-computed than to compute them online at the beginning of every run) in `data/queries_intersections_with_db_2021.torch`.
 
 ## Train
 Once the dataset is downloaded, simply run
