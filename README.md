@@ -38,7 +38,7 @@ For query images, `image_id` corresponds to mission, roll, frame, which are a un
 
 `sq_km_area` is the footprint covered area in squared kilometers, and `orientation` is the orientation of the image from 0 to 360° (e.g. 0° means that the image is north-up, like a normal map): orientation is always 0° for database images.
 
-Besides the images, the rsync command will download the file containing the intersections between queries and database images (it is faster to have them pre-computed than to compute them online at the beginning of every run) in `data/queries_intersections_with_db_2021.torch`.
+Besides the images, the rsync command will download the file containing the intersections between queries and database images (it is faster to have them pre-computed than to compute them online at the beginning of every run) in `data/queries_intersections_with_db_2021.pt`.
 
 ## Train
 Once the dataset is downloaded, simply run
