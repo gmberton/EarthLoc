@@ -20,17 +20,16 @@ def test(eval_ds, model, log_dir=None, num_preds_to_save=0, device="cuda", batch
     logging.debug("Test - computing descriptors")
     all_descriptors = np.empty((4, len(eval_ds), model.desc_dim), dtype="float32")
     with torch.no_grad():
-        with torch.cuda.amp.autocast():
-            dataloader = DataLoader(dataset=eval_ds, num_workers=num_workers,
-                                    batch_size=batch_size)
-            for images, indices, _ in tqdm(dataloader, ncols=120, desc="Computing descriptors"):
-                for rot_idx in range(4):
-                    angle = [0, 90, 180, 270][rot_idx]
-                    images = images.to(device)
-                    rot_images = tfm.functional.rotate(images, angle)
+        dataloader = DataLoader(dataset=eval_ds, num_workers=num_workers, batch_size=batch_size)
+        for images, indices, _ in tqdm(dataloader, ncols=120, desc="Computing descriptors"):
+            for rot_idx in range(4):
+                angle = [0, 90, 180, 270][rot_idx]
+                images = images.to(device)
+                rot_images = tfm.functional.rotate(images, angle)
+                with torch.autocast(device_type=device, dtype=torch.bfloat16):
                     descriptors = model(rot_images)
-                    descriptors = descriptors.cpu().numpy()
-                    all_descriptors[rot_idx, indices.numpy(), :] = descriptors
+                descriptors = descriptors.cpu().numpy()
+                all_descriptors[rot_idx, indices.numpy(), :] = descriptors
     
     q_descriptors = all_descriptors[0, eval_ds.num_db:]  # Only non-rotated queries
     db_descriptors = all_descriptors[:, :eval_ds.num_db]  # 4 rotation db images

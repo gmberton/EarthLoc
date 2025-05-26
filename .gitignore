@@ -1,4 +1,3 @@
-data/database
-data/queries
+data
 logs
 __pycache__

@@ -31,7 +31,7 @@ logging.info(f"Arguments: {args}")
 logging.info(f"The outputs are being saved in {args.log_dir}")
 
 model = APLModel()
-model = model.cuda()
+model = model.to(args.device)
 
 #### DATA ####
 db_paths = list((args.dataset_path / "database").glob("*/*/*.jpg"))
@@ -69,7 +69,6 @@ miner = miners.MultiSimilarityMiner(epsilon=0.1, distance=CosineSimilarity())
 optim = torch.optim.Adam(model.parameters(), lr=args.lr)
 
 best_r5 = not_improved_num = 0
-scaler = torch.cuda.amp.GradScaler()
 
 for num_epoch in range(args.num_epochs):
     
@@ -95,10 +94,10 @@ for num_epoch in range(args.num_epochs):
     for iteration, (images, is_overlapping, chosen_paths) in enumerate(tqdm_bar):
         if iteration >= args.iterations_per_epoch:
             break
-        with torch.cuda.amp.autocast():
+        with torch.autocast(device_type=args.device, dtype=torch.bfloat16):
             images = einops.rearrange(images, "one bs years c h w -> (one bs) years c h w",
                                       bs=args.batch_size, one=1, years=4)
-            images = images.cuda()
+            images = images.to(args.device)
             
             # Apply same augmentation to images from same year, i.e. Year-Wise Augmentation
             views = [augmentation(images[:, year]) for year in range(4)]
@@ -111,22 +110,21 @@ for num_epoch in range(args.num_epochs):
             
             # Filter away overlapping pairs of images, i.e. Neutral-Aware MS loss
             anchors, negatives = miner_outputs[2:]
-            is_non_overlapping = is_overlapping.cuda()[0, anchors//4, negatives//4] == 0
+            is_non_overlapping = is_overlapping.to(args.device)[0, anchors//4, negatives//4] == 0
             far_indexes = torch.where(is_non_overlapping)[0]
             anchors = anchors[far_indexes]
             negatives = negatives[far_indexes]
             miner_outputs = tuple([miner_outputs[0], miner_outputs[1], anchors, negatives])
             
             loss = criterion(descriptors, labels, miner_outputs)
-        scaler.scale(loss).backward()
+        loss.backward()
         
         # calculate the % of trivial pairs/triplets which do not contribute in the loss value
         nb_samples = descriptors.shape[0]
         nb_mined = len(set(miner_outputs[0].detach().cpu().numpy()))
         batch_acc = (1.0 - (nb_mined / nb_samples)) * 100
         
-        scaler.step(optim)
-        scaler.update()
+        optim.step()
         optim.zero_grad()
         mean_loss.update(loss.item())
         mean_batch_acc.update(batch_acc)
@@ -173,7 +171,7 @@ logging.info(f"Training finished in {str(datetime.now() - start_time)[:-7]}")
 logging.debug("Testing with the best model")
 
 best_model_path = list(args.log_dir.glob("best_*"))[0]
-best_model_state_dict = torch.load(best_model_path)
+best_model_state_dict = torch.load(best_model_path, weights_only=True)
 model.load_state_dict(best_model_state_dict)
 
 eval.eval_on_all_test_sets(model, args.dataset_path, db_paths, args.log_dir,

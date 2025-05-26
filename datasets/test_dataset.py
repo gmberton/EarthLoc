@@ -24,7 +24,7 @@ class TestDataset(torch.utils.data.Dataset):
             image_size,
             center_lat=45,
             center_lon=10,
-            intersections_filename="queries_intersections_with_db_2021.torch",
+            intersections_filename="queries_intersections_with_db_2021.pt",
             thresh_queries=2500,
             thresh_db=5000,
         ):
@@ -32,7 +32,7 @@ class TestDataset(torch.utils.data.Dataset):
         self.image_size = image_size
         
         point_of_interest = torch.tensor([[center_lat, center_lon]])
-        q_db_intersections = torch.load(dataset_path / intersections_filename)
+        q_db_intersections = torch.load(dataset_path / intersections_filename, weights_only=False)
         q_db_intersections = {q_path: [i[0] for i in inters] for q_path, inters in q_db_intersections.items()}
 
         # Get queries paths

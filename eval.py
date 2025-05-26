@@ -46,14 +46,14 @@ if __name__ == "__main__":
     logging.info(f"The outputs are being saved in {args.log_dir}")
     
     model = APLModel()
-    model = model.cuda()
+    model = model.to(args.device)
     
     #### DATA ####
     db_paths_from_2021 = list((args.dataset_path / "database").glob("*/*/*.jpg"))
     
     if args.resume_model is not None:
         logging.info(f"Loading model from {args.resume_model}")
-        model_state_dict = torch.load(args.resume_model)
+        model_state_dict = torch.load(args.resume_model, weights_only=True)
         model.load_state_dict(model_state_dict)
     else:
         logging.info("WARNING: You didn't provide a path to resume the model (--resume_model parameter). " +
