@@ -140,7 +140,7 @@ for num_epoch in range(args.num_epochs):
         prev_best_model = list(args.log_dir.glob("best_*"))
         if len(prev_best_model) != 0:  # Delete previous best_model file
             os.remove(prev_best_model[0])
-        torch.save(model.state_dict(), args.log_dir / f"best_model_{r5:.1f}.torch")
+        torch.save(model.state_dict(), args.log_dir / f"best_model_{r5:.1f}.pt")
         prev_ckpt = list(args.log_dir.glob("ckpt_*"))
         if len(prev_ckpt) != 0:  # Delete previous ckpt file
             os.remove(prev_ckpt[0])
@@ -149,7 +149,7 @@ for num_epoch in range(args.num_epochs):
             "model_state_dict": model.state_dict(),
             "optimizer_state_dict": optim.state_dict(),
             "best_r5": best_r5
-        }, args.log_dir / f"ckpt_e{num_epoch:02d}_{r5:.1f}.torch")
+        }, args.log_dir / f"ckpt_e{num_epoch:02d}_{r5:.1f}.pt")
             
         logging.debug(f"Improved: previous best r5 = {best_r5:.1f}, current r5 = {r5:.1f}")
         best_r5 = r5

@@ -41,7 +41,7 @@ def parse_arguments():
     parser.add_argument("--num_workers", type=int, default=3, help="_")
     
     parser.add_argument("--resume_model", type=str, default=None,
-                        help="pass the path of a best_model.torch file to load its weights")
+                        help="pass the path of a best_model.pt file to load its weights")
     
     # Visualizations
     parser.add_argument("--num_preds_to_save", type=int, default=20,
