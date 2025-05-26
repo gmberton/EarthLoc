@@ -22,7 +22,7 @@ To download the data you can simply run
 ```
 rsync -rhz --info=progress2 --ignore-existing rsync://vandaldata.polito.it/sf_xl/EarthLoc/data .
 ```
-Note: the data can only be downloaded with rsync. Using wget or HTTP or trying to download frmo your browser is not going to work.
+Note: the data can only be downloaded with rsync. Using wget or HTTP or trying to download from your browser is not going to work.
 
 This will download all required images within the directory `data`, which will take about 65 GB in storage.
 
