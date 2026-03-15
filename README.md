@@ -66,12 +66,12 @@ rsync -rhz --info=progress2 --ignore-existing rsync://vandaldata.polito.it/sf_xl
 
 ## Cite
 Here is the bibtex to cite our paper
-```
-@InProceedings{Berton_CVPR_2024_EarthLoc,
+```bibtex
+@inproceedings{Berton_CVPR_2024_EarthLoc,
     author    = {Berton, Gabriele and Stoken, Alex and Caputo, Barbara and Masone, Carlo},
     title     = {EarthLoc: Astronaut Photography Localization by Indexing Earth from Space},
-    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    booktitle = {IEEE/CVF Conference on Computer Vision and Pattern Recognition},
     month     = {June},
-    year      = {2024},
+    year      = {2024}
 }
 ```
